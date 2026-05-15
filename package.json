@@ -5,10 +5,26 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && npm run generate:scaffold && next build",
+    "build": "npm run prisma:generate && npm run generate:scaffold && next build",
     "start": "next start",
     "lint": "next lint",
-    "generate:scaffold": "node scripts/generate-scaffold.js"
+    "generate:scaffold": "node scripts/generate-scaffold.js",
+    "prisma:generate": "prisma generate",
+    "prisma:push": "prisma db push",
+    "prisma:migrate": "npm run prisma:push",
+    "prisma:studio": "prisma studio",
+    "db:push": "npm run prisma:push",
+    "db:deploy": "npm run prisma:push",
+    "migrate:dev": "npm run prisma:push",
+    "migrate:deploy": "npm run prisma:push",
+    "docker:dev": "docker compose up",
+    "docker:dev:build": "docker compose up --build",
+    "docker:prod": "docker compose -f docker-compose.prod.yml up -d",
+    "docker:prod:build": "docker compose -f docker-compose.prod.yml up -d --build",
+    "docker:down": "docker compose down",
+    "docker:prod:down": "docker compose -f docker-compose.prod.yml down",
+    "docker:logs": "docker compose logs -f app",
+    "docker:prod:logs": "docker compose -f docker-compose.prod.yml logs -f app"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^1.2.10",

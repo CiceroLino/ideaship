@@ -22,46 +22,46 @@ model Project {
   publishedAt DateTime?
   deployedUrl String?
   deployedAt  DateTime?
-  
+
   // Relations
-  messages    Message[]
-  files       File[]
-  
+  messages Message[]
+  files    File[]
+
   // Relation to User
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 // Stores individual messages in a chat conversation
 model Message {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  externalId  String?   // Optional external ID from AI provider
-  projectId   String    @db.ObjectId
-  role        String    // 'user' or 'assistant'
-  content     String    // Plain text content
-  reasoning   String?   // Optional reasoning for assistant messages
-  createdAt   DateTime  
-  
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  externalId String? // Optional external ID from AI provider
+  projectId  String   @db.ObjectId
+  role       String // 'user' or 'assistant'
+  content    String // Plain text content
+  reasoning  String? // Optional reasoning for assistant messages
+  createdAt  DateTime
+
   // Store all message parts as JSON directly in the message
-  parts       Json?     // Array of message parts stored as JSON
-  toolInvocations Json?  // Stored as JSON if needed
+  parts                    Json? // Array of message parts stored as JSON
+  toolInvocations          Json? // Stored as JSON if needed
   experimental_attachments Json? // Array of attachments stored as JSON for Vercel AI SDK
 
   // Relations
-  project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }
 
 // Stores files generated or modified in a project
 model File {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  projectId   String    @db.ObjectId
-  path        String    // File path
-  content     String    // File content
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  projectId String   @db.ObjectId
+  path      String // File path
+  content   String // File content
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   // Relations
-  project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
   @@unique([projectId, path])
 }
 
@@ -115,21 +115,21 @@ model Session {
 }
 
 model User {
-  id                  String        @id @default(auto()) @map("_id") @db.ObjectId
-  name                String?
-  email               String?       @unique
-  emailVerified       DateTime?
-  image               String?
-  credits             Int           @default(5)
+  id                   String    @id @default(auto()) @map("_id") @db.ObjectId
+  name                 String?
+  email                String?   @unique
+  emailVerified        DateTime?
+  image                String?
+  credits              Int       @default(5)
   // Chat credits spent today; reset daily
-  chatCreditsSpent    Int           @default(0)
+  chatCreditsSpent     Int       @default(0)
   // Timestamp of last reset of chat credits (UTC)
   chatCreditsLastReset DateTime?
-  
+
   // Relations
-  accounts            Account[]
-  sessions            Session[]
-  projects            Project[]
+  accounts Account[]
+  sessions Session[]
+  projects Project[]
 }
 
 model VerificationToken {
@@ -140,4 +140,3 @@ model VerificationToken {
 
   @@unique([identifier, token])
 }
-
